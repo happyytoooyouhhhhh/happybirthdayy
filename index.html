@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Mahi 💜</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080510;color:white;
+ font-family:Georgia,serif;min-height:100vh;
+ display:flex;align-items:center;justify-content:center;
+ overflow:hidden;
+}
+.hearts{position:fixed;inset:0;pointer-events:none;
+ background:radial-gradient(ellipse at top,#32134c 0%,#10091c 48%,#050309 100%)}
+.heart{position:absolute;color:#b76aff;
+ animation:float 7s linear infinite;opacity:.5}
+@keyframes float{
+ 0%{transform:translateY(100vh) rotate(0);opacity:0}
+ 20%{opacity:.6}100%{transform:translateY(-15vh) rotate(360deg);opacity:0}
+}
+.phone{position:relative;width: min(92vw,410px);
+ height:min(88dvh,760px);z-index:2;
+ border:1px solid #8e4bc7;border-radius:30px;
+ background:linear-gradient(145deg,#1b1028,#090610);
+ box-shadow:0 0 35px #8738c855;padding:22px;
+ display:flex;flex-direction:column;gap:16px}
+.top{display:flex;justify-content:space-between;
+ color:#d7b1ff;font-size:13px}
+.progress{display:flex;gap:3px}
+.progress span{height:3px;flex:1;background:#483451;border-radius:5px}
+.progress span.active{background:#c17aff}
+.story{flex:1;display:flex;flex-direction:column;
+ justify-content:center;align-items:center;text-align:center;
+ overflow:auto;scrollbar-width:none}
+h1{font-size:clamp(27px,7vw,36px);color:#e1baff;
+ text-shadow:0 0 20px #a64cff;margin:10px 0 20px}
+.lines{display:flex;flex-direction:column;gap:9px}
+.lines p{font-size:15px;line-height:1.55;color:#e9dcf8;margin:0}
+.decor{font-size:24px;color:#ba70ff;margin:12px}
+.buttons{display:flex;justify-content:space-between;gap:12px}
+button{border:1px solid #a85be8;background:#35194b;
+ color:white;border-radius:30px;padding:12px 19px;font-size:14px}
+button:disabled{opacity:.3}
+.footer{text-align:center;color:#ae89ce;font-size:11px}
+</style>
+</head>
+<body>
+<div class="hearts" id="hearts"></div>
+<div class="phone">
+ <div class="top"><b>♡ mahi.birthday</b><span id="count">01 / 18</span></div>
+ <div class="progress" id="progress"></div>
+ <main class="story">
+  <div class="decor">♡ ♥ ♡</div>
+  <h1 id="heading"></h1>
+  <div class="lines" id="lines"></div>
+  <div class="decor">✧ 💜 ✧</div>
+ </main>
+ <div class="buttons">
+  <button id="prev">← Back</button>
+  <button id="next">Next →</button>
+ </div>
+ <div class="footer">MADE WITH LOVE FOR MAHI 💜</div>
+</div>
+<script>
+const slides = [
+["Happy Birthday Mahi! 🎂",[
+"Aaj ka din bohat khoobsurat hai kyun ke aaj tumhara birthday hai.",
+"Allah kare tumhari zindagi ka har din khushiyon se bhara rahe.",
+"Tumhari har subah ek nayi umeed aur nayi muskurahat lekar aaye.",
+"Tumhare tamam khoobsurat khwab haqeeqat ban kar tumhare saamne aayen.",
+"Tumhari aankhon mein hamesha khushi aur chehre par smile rahe.",
+"Zindagi tumhein har woh khushi de jiski tum dil se tamanna karti ho.",
+"Tum hamesha apni zindagi mein kamyabi ki taraf barhti raho.",
+"Once again, happiest birthday to the most special Mahi! 💜"
+]],
+["Our Beautiful Mahi 👑",[
+"Mahi, tumhari personality mein ek alag hi khoobsurti aur charm hai.",
+"Tumhara baat karne ka andaaz bohat cute aur tumhari smile bohat pyari hai.",
+"Tum jab hansti ho to mahaul khud ba khud khoobsurat lagne lagta hai.",
+"Tumhari aankhon mein ek alag si chamak aur chehre par alag noor hai.",
+"Tumhara confidence tumhein doosron se bilkul different banata hai.",
+"Tumhari simplicity hi tumhari khoobsurti ko aur bhi khaas banati hai.",
+"Kabhi apni value kam mat samajhna kyun ke tum bohat special ho.",
+"Hamesha isi tarah beautiful, confident aur khush rehna meri queen! 💜"
+]],
+["Your Beautiful Smile ✨",[
+"Tumhari smile tumhari sabse khoobsurat pehchaan hai.",
+"Ek pyari si muskurahat se tum kisi ka bhi mood acha kar sakti ho.",
+"Allah kare tumhein kabhi kisi wajah se apni smile khona na pade.",
+"Tumhare chehre par hamesha khushi ke rang chamakte rahen.",
+"Koi pareshani tumhari muskurahat ko kabhi kam na kar sake.",
+"Tumhari zindagi mein hamesha aise moments aayen jo tumhein hansayen.",
+"Har din tumhare liye ek nayi khushi aur ek pyari memory lekar aaye.",
+"Keep smiling Mahi, because your smile is truly precious! 🦋"
+]],
+["Beauty With Attitude 🖤",[
+"Mahi tumhari beauty ke saath tumhara attitude bhi kamaal ka hai.",
+"Tum apne unique andaaz se har jagah alag nazar aati ho.",
+"Tumhara confidence tumhari personality ki sabse strong baat hai.",
+"Tumhein kisi ke jaisa banne ki zaroorat bilkul nahi hai.",
+"Apni individuality aur apne style ko hamesha sambhal kar rakhna.",
+"Duniya mein tumhari tarah koi doosra nahi ho sakta.",
+"Apne aap par fakhar karna aur apne dreams ke liye mehnat karna.",
+"Because you are one of a kind, Mahi! 👑"
+]],
+["PUBG Queen 🎮",[
+"Ab baat karte hain hamari favourite PUBG Queen Mahi ki.",
+"Jab tum game mein aati ho to lobby ka scene hi alag ho jata hai.",
+"Tumhara gaming style aur tumhara confidence dono zabardast hain.",
+"Har match mein tum apni skills aur apna talent dikhati ho.",
+"Chahe classic ho ya squad match, queen wali entry zaroor hoti hai.",
+"Enemies bhi sochte honge ke aaj kis queen se saamna ho gaya.",
+"Tumhari gaming journey hamesha exciting aur full of wins rahe.",
+"Keep ruling the battleground, PUBG Queen! 🍗"
+]],
+["Chicken Dinner 🍗",[
+"Winner winner chicken dinner, aaj sab kuch Mahi ke naam.",
+"Tumhare headshots aur tumhare clutches ki baat hi alag hai.",
+"Squad mein tumhari presence game ko aur bhi interesting banati hai.",
+"Har defeat ke baad dobara uthna hi asli gamer ki pehchaan hai.",
+"Rank push karna aur enemies ko surprise dena tumhara style hai.",
+"Game mein masti bhi karna aur apni skills ko improve bhi karna.",
+"Har match tumhare liye ek naya adventure lekar aaye.",
+"May your every match end with a chicken dinner! 🎮"
+]],
+["You Are Precious 💎",[
+"Kuch log apni presence se doosron ki zindagi khoobsurat bana dete hain.",
+"Tum bhi unhi logon mein se ek ho jinki apni alag importance hoti hai.",
+"Tumhari achi baatein aur tumhara pyara andaaz yaad reh jata hai.",
+"Hamesha un logon ke saath rehna jo tumhari respect karte hain.",
+"Apni khushi ko kabhi doosron ki expectations ke neeche mat dabana.",
+"Tumhara sukoon aur tumhari happiness bohat important hai.",
+"Zindagi mein hamesha apni worth ko samajhna aur khud se pyaar karna.",
+"You deserve all the beautiful things in this world! 💜"
+]],
+["Keep Shining 🌙",[
+"Zindagi mein kabhi kabhi mushkilein aati hain aur waqt badalta rehta hai.",
+"Lekin tumne apna confidence aur apni himmat kabhi nahi khona.",
+"Har mushkil ke baad ek behtar waqt zaroor aata hai.",
+"Apne dreams ko kabhi chhota mat samajhna aur unke peeche chalti rehna.",
+"Tumhare andar bohat talent hai aur tum bohat kuch achieve kar sakti ho.",
+"Har naya din tumhein apne goals ke qareeb le kar jaye.",
+"Apni roshni se apni duniya ko hamesha roshan rakho.",
+"Keep shining like a star, beautiful Mahi! ⭐"
+]],
+["A Heart Full Of Love 💌",[
+"Meri dua hai tumhari zindagi mein hamesha sachay log rahen.",
+"Tumhein hamesha woh log milen jo tumhari feelings samajh saken.",
+"Tumhari chhoti chhoti khushiyon ko celebrate karne wale dost milen.",
+"Har mushkil waqt mein tumhare paas support karne wale log hon.",
+"Tumhare dil ko kabhi be wajah takleef aur udaasi na mile.",
+"Tumhein har jagah respect, care aur mohabbat hasil ho.",
+"Zindagi mein hamesha achay aur sincere logon ka saath mile.",
+"May your heart always stay happy and peaceful! 💜"
+]],
+["Dream Big Mahi 🌠",[
+"Tumhare dil mein jo bhi dreams hain Allah unhein poora kare.",
+"Tum apni life mein woh sab hasil karo jo tum chahti ho.",
+"Tumhari mehnat ka result hamesha tumhari umeed se behtar ho.",
+"Har naya chance tumhare liye ek nayi kamyabi lekar aaye.",
+"Tumhare parents aur tumhare loved ones tum par fakhar karein.",
+"Kabhi apne goals se peeche mat hatna aur himmat banaye rakhna.",
+"Tumhari journey success aur beautiful memories se bhar jaye.",
+"Your future is bright, Mahi. Believe in yourself! ✨"
+]],
+["No More Sad Days 🦋",[
+"Allah kare tumhari zindagi mein udaasi ke lamhe bohat kam hon.",
+"Tumhari aankhon mein aansu sirf khushi ke hon aur dil mein sukoon ho.",
+"Koi pareshani tumhare hausle ko kabhi kam na kar sake.",
+"Har mushkil ka saamna tum himmat aur sabr ke saath kar sako.",
+"Tumhein har din koi na koi achi wajah muskurane ke liye mile.",
+"Tumhari life mein positive vibes aur khushiyon ki kami na ho.",
+"Apna khayal rakhna aur kabhi apni happiness ko ignore na karna.",
+"Stay happy forever, Mahi! 🖤"
+]],
+["Gaming Superstar 🎯",[
+"PUBG ki duniya mein tumhara apna ek alag style aur andaaz hai.",
+"Tumhari squad ko tumhari presence se bohat maza aata hoga.",
+"Har match mein naye challenges aur naye experiences milte hain.",
+"Har defeat tumhein aur behtar player banne ka chance deti hai.",
+"Apni favourite game ko enjoy karo aur apni skills improve karti raho.",
+"Enemies ke saamne confidence aur squad ke saath full masti.",
+"Har season mein tumhari performance aur bhi zabardast ho.",
+"Long live our PUBG superstar Mahi! 🎮"
+]],
+["A New Chapter 📖",[
+"Aaj se tumhari life ka ek aur khoobsurat saal shuru ho raha hai.",
+"Pichlay saal ki achi yaadon ko hamesha apne dil mein rakhna.",
+"Jo mushkilein aayi unse seekhna aur unhein peeche chhor dena.",
+"Is naye saal mein tumhein naye chances aur naye experiences milen.",
+"Tumhari har mehnat tumhein tumhari manzil tak le kar jaye.",
+"Har guzarta din tumhein pehle se zyada strong banaye.",
+"Tum apni life ko apne favourite dreams ke mutabiq jee sako.",
+"Welcome to another beautiful year, Mahi! 💜"
+]],
+["Never Change 🌸",[
+"Apni pyari si personality aur apna unique andaaz hamesha sambhal kar rakhna.",
+"Logon ki har baat ko dil par lena zaroori nahi hota.",
+"Apne aap ko doosron se compare karna kabhi zaroori nahi.",
+"Tumhari apni qualities hain jo tumhein special banati hain.",
+"Apni khushi, apni izzat aur apne dreams ko importance dena.",
+"Jo tumhein samjhein aur respect karein unki qadar karna.",
+"Hamesha apne aap se mohabbat karna aur apni value pehchanna.",
+"Stay the same amazing Mahi! 💜"
+]],
+["Endless Blessings 🤲",[
+"Allah tumhein hamesha sehat aur lambi zindagi ata farmaye.",
+"Tumhare har din mein barkat aur har kaam mein asani ho.",
+"Tumhare naseeb mein dher saari khushiyan aur kamyabiyan hon.",
+"Tumhein har buri nazar aur har pareshani se mehfooz rakhe.",
+"Tumhare parents aur family hamesha tumhari khushi ka sabab banen.",
+"Tumhare dil ki achi duayein aur jaiz khwahishein poori hon.",
+"Tumhari zindagi sukoon, mohabbat aur barkat se bhar jaye.",
+"Ameen, may Allah bless you always! 🤍"
+]],
+["You Deserve The Best 💜",[
+"Tum deserve karti ho ke tumhari zindagi bohat khoobsurat ho.",
+"Tumhein hamesha sincere aur caring logon ka saath mile.",
+"Tumhari har achievement ko celebrate karne wale log hon.",
+"Tumhari mehnat ki qadar ho aur tumhare dreams ko support mile.",
+"Tumhein kabhi apni importance kisi ko samjhani na pade.",
+"Har naya din tumhare liye khushi aur umeed lekar aaye.",
+"Tum apni life mein woh sab hasil karo jo tumhara dil chahta hai.",
+"Never settle for less than the happiness you deserve! 💎"
+]],
+["One More Birthday Wish 💌",[
+"Aaj ke is special din par tumhare liye dher saara pyaar.",
+"Tumhari life ka har aane wala saal pehle se behtar ho.",
+"Tumhari har birthday par tumhare paas naye reasons hon khush hone ke.",
+"Tum apni har achievement par fakhar mehsoos karo.",
+"Tumhare chehre ki smile kabhi kisi wajah se kam na ho.",
+"Zindagi tumhein khoobsurat surprises aur unforgettable memories de.",
+"Har lamha tumhare liye kisi pyare tohfay se kam na ho.",
+"Lots of love and best wishes for you, Mahi! 🎂"
+]],
+["Forever Birthday Queen 👑",[
+"Aur ab is special birthday story ka aakhri page aa gaya hai.",
+"Lekin tumhare liye achi duayein aur wishes kabhi khatam nahi hongi.",
+"Tum hamesha apni zindagi mein isi tarah shine karti rehna.",
+"Apni smile, apna confidence aur apni PUBG wali masti nahi chhorna.",
+"Tumhari life mein hamesha love, laughter aur peace bana rahe.",
+"Allah tumhein har woh khushi de jiski tum haqdar ho.",
+"Happy Birthday once again, our beautiful and amazing Mahi!",
+"Stay blessed, stay gorgeous, keep winning. Love you Mahi! 💜🖤"
+]]
+];
+
+let current=0;
+const heading=document.getElementById('heading');
+const lines=document.getElementById('lines');
+const count=document.getElementById('count');
+const progress=document.getElementById('progress');
+
+slides.forEach((s,i)=>{
+ const bar=document.createElement('span');
+ progress.appendChild(bar);
+});
+function render(){
+ const s=slides[current];
+ heading.textContent=s[0];
+ lines.innerHTML='';
+ s[1].forEach(line=>{
+  const p=document.createElement('p');
+  p.textContent=line;
+  lines.appendChild(p);
+ });
+ count.textContent=String(current+1).padStart(2,'0')+' / 18';
+ [...progress.children].forEach((b,i)=>{
+  b.classList.toggle('active',i<=current);
+ });
+ document.getElementById('prev').disabled=current===0;
+ document.getElementById('next').textContent=
+  current===17?'Replay ♡':'Next →';
+}
+document.getElementById('prev').onclick=()=>{
+ if(current>0){current--;render()}
+};
+document.getElementById('next').onclick=()=>{
+ current=current===17?0:current+1;render()
+};
+let startX=0;
+document.querySelector('.story').addEventListener('touchstart',e=>{
+ startX=e.changedTouches[0].screenX;
+},{passive:true});
+document.querySelector('.story').addEventListener('touchend',e=>{
+ let diff=e.changedTouches[0].screenX-startX;
+ if(Math.abs(diff)>50){
+  current=diff<0?Math.min(17,current+1):Math.max(0,current-1);
+  render();
+ }
+},{passive:true});
+for(let i=0;i<18;i++){
+ const h=document.createElement('span');
+ h.className='heart';
+ h.textContent=i%2?'♡':'♥';
+ h.style.left=Math.random()*100+'%';
+ h.style.animationDelay=Math.random()*7+'s';
+ h.style.fontSize=(14+Math.random()*20)+'px';
+ document.getElementById('hearts').appendChild(h);
+}
+render();
+</script>
+</body>
+</html>
